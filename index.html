@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audience-Led Worlds</title>
+<style>
+body {
+    margin: 0;
+    font-family: sans-serif;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+.top-bar {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    z-index: 1000;
+}
+#promptInput, #generateButton {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+#promptInput { flex-grow: 1; }
+#generateButton {
+    background-color: salmon;
+    color: white;
+    cursor: pointer;
+}
+#generateButton:hover { background-color: #e67373; }
+
+.main-content {
+    position: relative;
+    overflow: hidden;
+}
+#canvas-viewport {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    background-color: #ffffff;
+}
+#canvas-content {
+    width: 15000px;
+    height: 9000px;
+    position: relative;
+}
+.canvas-image {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid #aaaaaa;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.canvas-image.visible {
+    opacity: 1;
+}
+.collective-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 300px;              /* keep same width */
+    aspect-ratio: 9 / 16;      /* enforce 9:16 vertical frame */
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;       /* rounded angles instead of circle */
+    padding: 0.5rem;
+    z-index: 1000;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#collectiveImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;       /* match container rounding */
+    border: 2px solid #aaaaaa;
+    transition: opacity 1s ease-in-out;
+}
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+    <input type="text" id="promptInput" placeholder="Add your vision to the collective...">
+    <button id="generateButton">Generate</button>
+</header>
+
+<main class="main-content">
+    <div id="canvas-viewport">
+        <div id="canvas-content"></div>
+    </div>
+
+    <div class="collective-container">
+        <h2>Collective Consciousness</h2>
+        <img id="collectiveImage" src="images/collective/White-noise.jpg" alt="Collective image">
+		
+	<div class="project-info" style="margin-top: 1rem; font-size: 0.9rem; text-align: center;">
+        <p>Project Author – <strong>Dr. Kateryna Kononova</strong></p>
+        <p><a href="mailto:kateryna.kononova@gmail.com">kateryna.kononova@gmail.com</a></p>
+        <p><a href="project_description.pdf" target="_blank">📄 Project Description (PDF)</a></p>
+    </div>
+	
+    </div>
+</main>
+
+<script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+<script>
+const canvasViewport = document.getElementById('canvas-viewport');
+const canvas = document.getElementById('canvas-content');
+const collectiveImage = document.getElementById('collectiveImage');
+
+const panzoomInstance = Panzoom(canvas, {
+    maxScale: 5,
+    minScale: 0.1,
+    contain: 'outside'
+});
+canvasViewport.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+
+let isPanning = false;
+let startX = 0, startY = 0;
+canvasViewport.addEventListener('mousedown', e => {
+    isPanning = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    canvasViewport.style.cursor = 'grabbing';
+});
+canvasViewport.addEventListener('mousemove', e => {
+    if (!isPanning) return;
+    panzoomInstance.panBy(e.clientX - startX, e.clientY - startY);
+    startX = e.clientX;
+    startY = e.clientY;
+});
+canvasViewport.addEventListener('mouseup', () => {
+    isPanning = false;
+    canvasViewport.style.cursor = 'grab';
+});
+canvasViewport.addEventListener('mouseleave', () => {
+    isPanning = false;
+    canvasViewport.style.cursor = 'grab';
+});
+
+// Fade helper for collective image
+async function fadeCollective(src) {
+    collectiveImage.style.opacity = 0;
+    await new Promise(r => setTimeout(r, 500));
+    collectiveImage.src = src;
+    await new Promise(r => setTimeout(r, 50));
+    collectiveImage.style.opacity = 1;
+}
+
+async function loadJSON() {
+    const promptInput = document.getElementById('promptInput');
+    const [imagesRes, canvasRes, collectiveRes] = await Promise.all([
+        fetch('images.json'),
+        fetch('canvas.json'),
+        fetch('collective.json')
+    ]);
+    const [imagesData, canvasData, collectiveData] = await Promise.all([
+        imagesRes.json(),
+        canvasRes.json(),
+        collectiveRes.json()
+    ]);
+
+    imagesData.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+    const scaleFactor = 100;
+    const centerX = canvasViewport.clientWidth / 2;
+    const centerY = canvasViewport.clientHeight / 2;
+    const offsetX = centerX - ((Math.min(...canvasData.map(c=>c.pos_x)) + Math.max(...canvasData.map(c=>c.pos_x))) / 2) * scaleFactor;
+    const offsetY = centerY - ((Math.min(...canvasData.map(c=>c.pos_y)) + Math.max(...canvasData.map(c=>c.pos_y))) / 2) * scaleFactor;
+
+    let firstImgEl = null;
+    let imgCounter = 0;
+    let collectiveIndex = 0;
+
+    if (collectiveData.length > 0) {
+        collectiveImage.src = "images/collective/" + collectiveData[0].file;
+        collectiveIndex = 1;
+    }
+
+    for (let imgItem of imagesData) {
+        const pos = canvasData.find(c => c.image_id === imgItem.id) || { pos_x: 0, pos_y: 0 };
+        const imgEl = document.createElement('img');
+        imgEl.src = 'images/' + imgItem.image_url.trim();
+        imgEl.className = 'canvas-image';
+        imgEl.style.left = pos.pos_x * scaleFactor + offsetX + 'px';
+        imgEl.style.top  = pos.pos_y * scaleFactor + offsetY + 'px';
+        canvas.appendChild(imgEl);
+
+        // fade in
+        requestAnimationFrame(() => imgEl.classList.add('visible'));
+
+        promptInput.value = imgItem.user_prompt;
+
+        if (!firstImgEl) firstImgEl = imgEl;
+        imgCounter++;
+
+        if (imgCounter % 5 === 0 && collectiveIndex < collectiveData.length) {
+            await fadeCollective("images/collective/" + collectiveData[collectiveIndex].file);
+            collectiveIndex++;
+        }
+
+        await new Promise(r => setTimeout(r, 2000));
+    }
+
+    if (collectiveIndex >= collectiveData.length) {
+        collectiveImage.src = "images/collective/" + collectiveData[collectiveData.length - 1].file;
+    }
+
+    if (firstImgEl) {
+        const rect = firstImgEl.getBoundingClientRect();
+        const viewportRect = canvasViewport.getBoundingClientRect();
+        const dx = viewportRect.width / 2 - (rect.left + rect.width / 2);
+        const dy = viewportRect.height / 2 - (rect.top + rect.height / 2);
+        panzoomInstance.pan(dx, dy);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadJSON);
+</script>
+</body>
+</html>

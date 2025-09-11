@@ -1,0 +1,23 @@
+['cat', 'dog', 'rocket', "Rubik's Cube gan 16", 'sunny day', 'man', 'woman', 'garden', 'spaceship']
+['man', 'woman', 'garden', 'spaceship', 'ship', 'bengal cat', 'boy']
+['ship', 'bengal cat', 'boy', 'girl', 'grandma cooking', 'road bike', 'woman', 'house']
+['girl', 'grandma cooking', 'road bike', 'woman', 'house', 'titanic', 'wooden table', 'flower', 'tree', "Rubik's Cube moyu 21*21"]
+['titanic', 'wooden table', 'flower', 'tree', "Rubik's Cube moyu 21*21", 'guitar', 'car', "Rubik's Cube 3*3", 'bike', 'sea and mountains']
+['guitar', 'car', "Rubik's Cube 3*3", 'bike', 'sea and mountains', 'motobike', 'helicopter', 'grandpa', 'laughing children', 'airplane']
+['motobike', 'helicopter', 'grandpa', 'laughing children', 'airplane', 'grass', 'gömböc', 'vinyl record player', 'kitten', 'puppy']
+['grass', 'gömböc', 'vinyl record player', 'kitten', 'puppy', "Rubik's Cube 49*49", 'cat', 'car', 'sportcar', 'Cats']
+['Rubik's Cube 49*49', 'cat', 'car', 'sportcar', 'Cats', 'lizards', 'tulips', 'the sea', 'The paintings of Monet, Renoir, and Dalí', 'Cypresses, firs, and pines']
+['lizards', 'tulips', 'the sea', 'The paintings of Monet, Renoir, and Dalí', 'Cypresses, firs, and pines', 'The sun', 'the stars', 'Artificial intelligence', 'black jeep gliding through the night', 'A juniper branch, bending low to touch the earth']
+['The sun', 'the stars', 'Artificial intelligence', 'black jeep gliding through the night', 'A juniper branch, bending low to touch the earth', 'Wild vine, climbing in whispers along the wall', 'A crystal carafe, scattering shards of light', 'A flower, tearing itself open toward the sun', 'A fork, pierced deep into a tender steak', 'An angel, sliding down behind humankind']
+['Wild vine, climbing in whispers along the wall', 'A crystal carafe, scattering shards of light', 'A flower, tearing itself open toward the sun', 'A fork, pierced deep into a tender steak', 'An angel, sliding down behind humankind', 'Warmth, enfolding body and soul alike', 'Water splashing in a puddle as a car rushes past', 'Bubbles clinging to the glass of wine', 'Pebbles that bite at the naked heels', 'A ray']
+['Warmth, enfolding body and soul alike', 'Water splashing in a puddle as a car rushes past', 'Bubbles clinging to the glass of wine', 'Pebbles that bite at the naked heels', 'A ray', 'The wind', 'Freedom', 'A wave', 'Beer', 'Mountains']
+['The wind', 'Freedom', 'A wave', 'Beer', 'Mountains', 'Strength', 'A sphere', 'Flight', 'The sky', 'Forest']
+['Strength', 'A sphere', 'Flight', 'The sky', 'Forest', 'sea', 'stones', 'A cat', 'a mouse', 'Fire']
+['sea', 'stones', 'A cat', 'a mouse', 'Fire', 'clay', 'flowers', 'The potter’s wheel', 'birds taking wing']
+
+
+
+A photorealistic image that tells a story using these key-words: {', '.join(top_words)}.
+Do not include any objects, entities, or elements other than those listed in the key-words.
+All elements appear together in a single coherent scene, interacting naturally with consistent lighting and palette.
+A meticulously composed, photorealistic scene in the style of Wes Anderson films. Perfect symmetry and centered framing, pastel color palette with muted yet vibrant tones, vintage 1960s aesthetic, nostalgic atmosphere. Soft, diffused natural lighting.  Shot on a wide-angle lens for depth, shallow depth of field for cinematic focus, highly detailed textures and realistic lighting. 
