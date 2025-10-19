@@ -9,126 +9,149 @@
   <meta name="author" content="Kateryna Kononova">
 
   <!-- Social Sharing -->
-  <meta property="og:title" content="Audience-Led Worlds" />
-  <meta property="og:url" content="https://katerynakononova.github.io/promptopia/" />
+  <meta property="og:title" content="Imaginum Pilot Experiment" />
+  <meta property="og:url" content="https://katerynakononova.github.io/imaginum-pilot/" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
   <link rel="icon" type="image/x-icon" href="favicon.png">
-<title>Audience-Led Worlds</title>
-<style>
-body {
-    margin: 0;
-    font-family: sans-serif;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    height: 100vh;
-    overflow: hidden;
-}
-.top-bar {
-    background-color: white;
-    padding: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    z-index: 1000;
-}
-#promptInput, #generateButton {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-#promptInput { flex-grow: 1; }
-#generateButton {
-    background-color: salmon;
-    color: white;
-    cursor: pointer;
-}
-#generateButton:hover { background-color: #e67373; }
+  <title>Imaginum Pilot Experiment</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .top-bar {
+      background-color: white;
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      z-index: 1000;
+    }
+    #promptInput, #generateButton {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    #promptInput { flex-grow: 1; }
+    #generateButton {
+      background-color: salmon;
+      color: white;
+      cursor: pointer;
+    }
+    #generateButton:hover { background-color: #e67373; }
 
-.main-content {
-    position: relative;
-    overflow: hidden;
-}
-#canvas-viewport {
-    width: 100%;
-    height: 100%;
-    cursor: grab;
-    background-color: #ffffff;
-}
-#canvas-content {
-    width: 15000px;
-    height: 9000px;
-    position: relative;
-}
-.canvas-image {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    border: 2px solid #aaaaaa;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: opacity 1s ease-in;
-}
-.canvas-image.visible {
-    opacity: 1;
-}
-.collective-container {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    width: 300px;              /* keep same width */
-    aspect-ratio: 9 / 16;      /* enforce 9:16 vertical frame */
-    background: rgba(255,255,255,0.9);
-    border-radius: 20px;       /* rounded angles instead of circle */
-    padding: 0.5rem;
-    z-index: 1000;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    .main-content {
+      position: relative;
+      overflow: hidden;
+    }
 
-#collectiveImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;       /* match container rounding */
-    border: 2px solid #aaaaaa;
-    transition: opacity 1s ease-in-out;
-}
-</style>
+    /* ✅ Transparent text overlay */
+    .pilot-text {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 600px;
+      max-width: 90%;
+      background: transparent;
+      color: black;
+      font-size: 0.95rem;
+      line-height: 1.15;
+      z-index: 10;
+      pointer-events: none; /* allows pan/zoom through text */
+    }
+
+    #canvas-viewport {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      background-color: #ffffff;
+    }
+    #canvas-content {
+      width: 15000px;
+      height: 9000px;
+      position: relative;
+    }
+    .canvas-image {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid #aaaaaa;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+    .canvas-image.visible {
+      opacity: 1;
+    }
+    .collective-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 300px;
+      aspect-ratio: 9 / 16;
+      background: rgba(255,255,255,0.9);
+      border-radius: 20px;
+      padding: 0.5rem;
+      z-index: 1000;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #collectiveImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 2px solid #aaaaaa;
+      transition: opacity 1s ease-in-out;
+    }
+  </style>
 </head>
 <body>
 
 <header class="top-bar">
-    <input type="text" id="promptInput" placeholder="Add your vision to the collective...">
-    <button id="generateButton">Generate</button>
+  <input type="text" id="promptInput" placeholder="Add your vision to the collective...">
+  <button id="generateButton">Generate</button>
 </header>
 
 <main class="main-content">
-    <div id="canvas-viewport">
-        <div id="canvas-content"></div>
-    </div>
 
-    <div class="collective-container">
-        <h2>Collective Consciousness</h2>
-        <img id="collectiveImage" src="images/collective/White-noise.jpg" alt="Collective image">
-		
-		<hr style="margin: 1rem 0; border: none; border-top: 1px solid #ccc;">
-		
-		<div class="project-info" style="margin-top: 1rem; font-size: 0.9rem; text-align: center;">
-			<p>Made with love by <a href="https://katerynakononova.github.io/meowlearning/" target="_blank" rel="noopener noreferrer">Kateryna Kononova</a>, 2025</p>
-			<p><a href="mailto:kateryna.kononova@gmail.com">[✉] kateryna.kononova@gmail.com</a></p>
-			<p><a href="Audience-Led-Worlds.pdf" target="_blank">[↓] Project Description (PDF)</a></p>
-		</div>
-	
+  <!-- ✨ Transparent text block -->
+  <div class="pilot-text">
+    <h2>Imaginum Pilot Experiment.<br> Kharkiv, Ukraine (28 August 2025)</h2>
+    <p>The first pilot experiment of <strong>Imaginum: A Living Laboratory for Artistic Research</strong> was conducted in <strong>Kharkiv, Ukraine</strong>, on <strong>28 August 2025</strong>. Eight participants (4 female, 4 male) took part in a shared creative session exploring what defines the ideal place to live.</p> <p>Each participant worked <strong>individually on their own laptop</strong>, yet <strong>simultaneously within a shared online environment</strong>. Over the course of about <strong>30 minutes</strong>, they were asked to create around <strong>10 short text prompts</strong> describing the most essential elements they would need in their imagined living space, resulting in a dataset of <strong>84 prompts</strong>.</p> <p>As they worked, each text was instantly transformed by an <strong>AI-based text-to-image system</strong> into a visual representation displayed on a <strong>common digital canvas</strong>. Participants could see the evolving gallery of images in real time but not one another’s textual inputs, engaging instead in a <strong>collective visual dialogue</strong> mediated by artificial intelligence.</p> <p>From the most frequently used words, the system generated <strong>16 generalized images</strong> that reflected the shared tendencies of the group’s imagination. After the session, all textual prompts were sequenced chronologically and transformed into an <strong>AI-generated song-over composition</strong>, turning the participants’ ideas into a collective sonic narrative.</p> <p>Despite limited resources, the Kharkiv pilot successfully demonstrated how Imaginum enables <strong>simultaneous, distributed co-creation</strong>, transforming individual imagination into a shared visual and auditory experience, and offering new insights into <strong>collective artistic intelligence</strong>.</p>
+  </div>
+
+  <!-- 🖼 Canvas for images -->
+  <div id="canvas-viewport">
+    <div id="canvas-content"></div>
+  </div>
+
+  <!-- 🧠 Collective image container -->
+  <div class="collective-container">
+    <h2>Collective Consciousness</h2>
+    <img id="collectiveImage" src="images/collective/White-noise.jpg" alt="Collective image">
+
+    <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ccc;">
+
+    <div class="project-info" style="margin-top: 1rem; font-size: 0.9rem; text-align: center;">
+      <p>Made with love by <a href="https://katerynakononova.github.io/meowlearning/" target="_blank" rel="noopener noreferrer">Kateryna Kononova</a>, 2025</p>
+      <p><a href="mailto:kateryna.kononova@gmail.com">[✉] kateryna.kononova@gmail.com</a></p>
+      <p><a href="Imaginum.pdf" target="_blank">[↓] Project Description (PDF)</a></p>
     </div>
+  </div>
 </main>
 
 <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
